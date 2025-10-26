@@ -44,6 +44,17 @@ const HotelData = [
     }
 ];
 
+// Data Creation Endpoint
+app.post("/api/Hoteldata" ,(req,res) => {
+    const newhotel = req.body;
+    const ID = HotelData.length + 1;
+    newhotel._id = ID;
+    if(!newhotel.name || !newhotel.image || !newhotel.location || !newhotel.rate || !newhotel.reviews || !newhotel.price){
+        res.status(400).send("All fields are required");
+    }
+    HotelData.push(newhotel);
+    res.status(201).send("New hotel added successfully");   
+})
 
 // Data Retrieval Endpoint
 app.get("/api/HotelData",(req,res) => {
@@ -51,13 +62,13 @@ app.get("/api/HotelData",(req,res) => {
 })
 app.get("/api/HotelData/:_id",(req , res) => {
     const ID = parseInt(req.params._id);
+    console.log("Retrieving hotel with ID:", req.params._id);
     const hotel = HotelData.find((h) => h._id === ID);
     if(!hotel){
         res.status(404).send("Hotel not found");
     }
     res.status(200).json(hotel);
 });
-
 
 
 const PORT = 8000;     
