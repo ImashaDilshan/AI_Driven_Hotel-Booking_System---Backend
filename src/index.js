@@ -70,6 +70,17 @@ app.get("/api/HotelData/:_id",(req , res) => {
     res.status(200).json(hotel);
 });
 
+// Data Deletion Endpoint
+app.delete("/api/HotelData/:_id",(req,res) => {
+    const ID = parseInt(req.params._id);
+    const hotelIndex = HotelData.findIndex((h) => h._id === ID);
+    if(hotelIndex === -1){
+        res.status(404).send("Hotel not found");
+    }
+    HotelData.splice(hotelIndex,1);
+    res.status(200).send("Hotel deleted successfully");
+})
+
 
 const PORT = 8000;     
 app.listen(PORT, () => {
