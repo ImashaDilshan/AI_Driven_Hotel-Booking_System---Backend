@@ -70,6 +70,30 @@ app.get("/api/HotelData/:_id",(req , res) => {
     res.status(200).json(hotel);
 });
 
+// Data Update Endpoint
+app.put("/api/HotelData/:_id",(req,res) => {
+    const ID = parseInt(req.params._id);
+    const hotelIndex = HotelData.findIndex((h) => h._id === ID);
+    if(hotelIndex === -1){
+        res.status(404).send("Hotel not found");
+    }
+    const updatedData = req.body;
+    const updatedHotel = {...HotelData[hotelIndex], ...updatedData};
+    HotelData.splice(hotelIndex,1);
+    HotelData.push(updatedHotel);
+    res.status(200).send("Hotel updated successfully");
+});
+app.patch("/api/HotelData/:_id",(req,res) => {
+    const ID = parseInt(req.params._id);
+    const hotel = HotelData.find((h) => h._id === ID);
+    if(!hotel){
+        res.status(404).send("Hotel not found");
+    }
+    const updatedData = req.body;
+    hotel.price = updatedData.price ;
+    res.status(200).send("Hotel price updated successfully");
+});
+
 // Data Deletion Endpoint
 app.delete("/api/HotelData/:_id",(req,res) => {
     const ID = parseInt(req.params._id);
