@@ -44,55 +44,21 @@ const HotelData = [
     }
 ];
 
-// Retrieving Data
-app.get("/api/hotels", (req,res) => {   
-    res.status(200).json(hotels);
+
+// Data Retrieval Endpoint
+app.get("/api/HotelData",(req,res) => {
+    res.status(200).json(HotelData);
+})
+app.get("/api/HotelData/:_id",(req , res) => {
+    const ID = parseInt(req.params._id);
+    const hotel = HotelData.find((h) => h._id === ID);
+    if(!hotel){
+        res.status(404).send("Hotel not found");
+    }
+    res.status(200).json(hotel);
 });
 
-app.get("/api/hotels/:id", (req, res) => {
-    const h_id = parseInt(req.params.id);     // Extracting and converting id to integer
-    const rqhotel  = hotels.find((h) => h.id === h_id);
-    if(!rqhotel) {
-        res.status(404).send("Hotel not found");
-    } 
-    res.status(200).json(rqhotel);
-})
 
-// Adding Data
-app.post("/api/hotels", (req,res) => {
-    const newHotel = req.body;
-    newHotel.id = hotels.length + 1;
-    if(!newHotel.name || !newHotel.location || !newHotel.rating) {               // Basic validation
-        res.status(400).send("All fields are required: name, location, rating");
-    }
-    hotels.push(newHotel);
-    res.status(201).send("Hotel added successfully");
-})
-
-// Updating Data
-app.put("/api/hotels/:id", (req,res) => {
-    const _id = parseInt(req.params.id);
-    const Index = hotels.findIndex((h) => h.id === _id);
-    if(Index === -1) {
-        res.status(404).send("Hotel not found");
-    }
-    const updateData = req.body;          // Data to be updated
-    const updateHotel = { ...hotels[Index], ...updateData }; // Merging existing data with new data
-    hotels.splice(Index , 1);       // Removing old data
-    hotels.push(updateHotel);     // Adding updated data
-    res.status(200).send("Hotel updated successfully");
-})
-
-// Deleting Data
-app.delete("/api/hotels/:id", (req, res) => {
-    const _id = parseInt(req.params.id);
-    const Index = hotels.findIndex((h) => h.id === _id);
-    if(Index === -1) {
-        res.status(404).send("Hotel not found");
-    }
-    hotels.splice(Index , 1);       // Removing hotel data
-    res.status(200).send("Hotel deleted successfully");
-})
 
 const PORT = 8000;     
 app.listen(PORT, () => {
