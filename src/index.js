@@ -1,5 +1,7 @@
+import 'dotenv/config';
 import express from 'express';
 import hotelRouter from './api/hotel.js';
+import connectDB from './infrastucture/db.js';
 
 const app = express(); 
 
@@ -8,6 +10,7 @@ app.use(express.json());
 app.use("/api/HotelData", hotelRouter);
 
 
+connectDB();
 
 // // Data Creation Endpoint
 // app.post("/api/Hoteldata" ,(req,res) => {
