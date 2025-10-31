@@ -48,7 +48,6 @@ export const getAllHotels = (req,res) => {
 
 export const getHotelById = (req , res) => {
     const ID = parseInt(req.params._id);
-    console.log("Retrieving hotel with ID:", req.params._id);
     const hotel = HotelData.find((h) => h._id === ID);
     if(!hotel){
         res.status(404).send("Hotel not found");
