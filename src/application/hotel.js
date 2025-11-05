@@ -1,4 +1,7 @@
 import express from 'express';
+import Hotel from '../infrastucture/entities/Hotel.js';
+import e from 'express';
+
 
 const HotelData = [
     {
@@ -41,30 +44,43 @@ const HotelData = [
 ]
 
 
-// Data Retrieval operations
-export const getAllHotels = (req,res) => {
-    res.status(200).json(HotelData);
+// Data Retrieval async operations
+export const getAllHotels = async (req,res) => {
+    try{
+        const hotels = await Hotel.find();
+        res.status(200).json(hotels);
+    }catch(error){
+        res.status(500).send("Server Error");
+    }
 }
 
-export const getHotelById = (req , res) => {
+export const getHotelById = async (req , res) => {
+    try{
     const ID = parseInt(req.params._id);
-    const hotel = HotelData.find((h) => h._id === ID);
+    const hotel = await Hotel.findById(ID);
     if(!hotel){
         res.status(404).send("Hotel not found");
+        return;
     }
     res.status(200).json(hotel);
+    }catch(error){
+        res.status(500).send(error.message);
+    }
 }
 
-// Data Creation operation
-export const createHotel = (req,res) => {
+//Data Creation async operation
+export const createHotel = async (req,res) => {
+    try{
     const newhotel = req.body;
-    const ID = HotelData.length + 1;
-    newhotel._id = ID;
     if(!newhotel.name || !newhotel.image || !newhotel.location || !newhotel.rate || !newhotel.reviews || !newhotel.price){
         res.status(400).send("All fields are required");
+        return;
     }
-    HotelData.push(newhotel);
-    res.status(201).send("New hotel added successfully");   
+    await Hotel.create(newhotel);
+    res.status(201).send("New hotel added successfully");
+    }catch(error){
+        res.status(500).send(error.message);
+    }   
 }
 
 // Data Update operations
