@@ -3,6 +3,7 @@ import Hotel from '../infrastucture/entities/Hotel.js';
 import e from 'express';
 
 
+// In asynchronous operations, we interact with the database using Mongoose. no need to use the in-memory array for these operations.
 const HotelData = [
     {
         _id: 1,
