@@ -51,7 +51,7 @@ export const getAllHotels = async (req,res) => {
         const hotels = await Hotel.find();
         res.status(200).json(hotels);
     }catch(error){
-        res.status(500).send("Server Error");
+        res.status(500).send("Server Error !");
     }
 }
 
@@ -60,7 +60,7 @@ export const getHotelById = async (req , res) => {
     const ID = parseInt(req.params._id);
     const hotel = await Hotel.findById(ID);
     if(!hotel){
-        res.status(404).send("Hotel not found");
+        res.status(404).send("Hotel not found !");
         return;
     }
     res.status(200).json(hotel);
@@ -74,11 +74,11 @@ export const createHotel = async (req,res) => {
     try{
     const newhotel = req.body;
     if(!newhotel.name || !newhotel.image || !newhotel.location || !newhotel.rate || !newhotel.reviews || !newhotel.price){
-        res.status(400).send("All fields are required");
+        res.status(400).send("All fields are required !");
         return;
     }
     await Hotel.create(newhotel);
-    res.status(201).send("New hotel added successfully");
+    res.status(201).send("New hotel added successfully !");
     }catch(error){
         res.status(500).send(error.message);
     }   
@@ -89,24 +89,24 @@ export const updateHotel = (req,res) => {
     const ID = parseInt(req.params._id);
     const hotelIndex = HotelData.findIndex((h) => h._id === ID);
     if(hotelIndex === -1){
-        res.status(404).send("Hotel not found");
+        res.status(404).send("Hotel not found !");
     }
     const updatedData = req.body;
     const updatedHotel = {...HotelData[hotelIndex], ...updatedData};
     HotelData.splice(hotelIndex,1);
     HotelData.push(updatedHotel);
-    res.status(200).send("Hotel updated successfully");
+    res.status(200).send("Hotel updated successfully !");
 }
 
 export const patchHotel = (req,res) => {
     const ID = parseInt(req.params._id);
     const hotel = HotelData.find((h) => h._id === ID);
     if(!hotel){
-        res.status(404).send("Hotel not found");
+        res.status(404).send("Hotel not found !");
     }
     const updatedData = req.body;
     hotel.price = updatedData.price ;
-    res.status(200).send("Hotel price updated successfully");
+    res.status(200).send("Hotel price updated successfully !");
 }
 
 // Data Deletion operation
@@ -117,5 +117,5 @@ export const deleteHotel = (req,res) => {
         res.status(404).send("Hotel not found");
     }
     HotelData.splice(hotelIndex,1);
-    res.status(200).send("Hotel deleted successfully");
+    res.status(200).send("Hotel deleted successfully !");
 }
