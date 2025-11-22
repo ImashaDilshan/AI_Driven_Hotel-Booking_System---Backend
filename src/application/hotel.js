@@ -128,12 +128,17 @@ export const patchHotel = async (req,res) => {
 }  
 
 // Data Deletion operation
-export const deleteHotel = (req,res) => {
-    const ID = parseInt(req.params._id);
-    const hotelIndex = HotelData.findIndex((h) => h._id === ID);
-    if(hotelIndex === -1){
-        res.status(404).send("Hotel not found");
+export const deleteHotel = async (req,res) => {
+   try{
+    const _id = parseInt(req.params._id);
+    const hotel = await Hotel.findById(_id);
+    if(!hotel){
+        res.status(404).send("Hotel not found !");
+        return;
     }
-    HotelData.splice(hotelIndex,1);
+    await Hotel.findByIdAndDelete(_id);
     res.status(200).send("Hotel deleted successfully !");
+   }catch(error){
+    res.status(500).send(error.message);
+   }
 }
