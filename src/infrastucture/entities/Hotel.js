@@ -6,7 +6,7 @@ const hotelSchema = new mongoose.Schema({
     name : { type: String, required: true },
     image : { type: String, required: true },
     location : { type: String, required: true },
-    rate : { type: Number, min: 1, max: 5 },
+    rate : { type: Number, min: 0, max: 5 },
     reviews : { type: Number },
     price : { type: String, required: true }
 
