@@ -106,15 +106,25 @@ export const updateHotel =  async (req,res) => {
     }
 }
 
-export const patchHotel = (req,res) => {
-    const ID = parseInt(req.params._id);
-    const hotel = HotelData.find((h) => h._id === ID);
-    if(!hotel){
-        res.status(404).send("Hotel not found !");
+export const patchHotel = async (req,res) => {
+    try{
+        const _id = parseInt(req.params._id);
+        const hotelUpdates = req.body;
+        if(!hotelUpdates.price){
+            res.status(400).send("Price field is required for patching !");
+            return;
+        }
+        const hotel = await Hotel.findById(_id);
+        if(!hotel){
+            res.status(404).send("Hotel not found !");
+            return;
+        }
+        await Hotel.findByIdAndUpdate(_id, { price: hotelUpdates.price });
+        res.status(200).send("Hotel price updated successfully !");
+
+    }catch(error){
+        res.status(500).send(error.message);
     }
-    const updatedData = req.body;
-    hotel.price = updatedData.price ;
-    res.status(200).send("Hotel price updated successfully !");
 }  
 
 // Data Deletion operation
