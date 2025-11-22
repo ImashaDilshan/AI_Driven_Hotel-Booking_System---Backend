@@ -1,6 +1,7 @@
 import express from 'express';
 import Hotel from '../infrastucture/entities/Hotel.js';
 import e from 'express';
+import { parse } from 'dotenv';
 
 
 // In asynchronous operations, we interact with the database using Mongoose. no need to use the in-memory array for these operations.
@@ -85,17 +86,24 @@ export const createHotel = async (req,res) => {
 }
 
 // Data Update operations
-export const updateHotel = (req,res) => {
-    const ID = parseInt(req.params._id);
-    const hotelIndex = HotelData.findIndex((h) => h._id === ID);
-    if(hotelIndex === -1){
-        res.status(404).send("Hotel not found !");
+export const updateHotel =  async (req,res) => {
+    try{
+        const _id = parseInt(req.params._id);
+        const updatedHotel = req.body;
+        if(!updatedHotel.name || !updatedHotel.image || !updatedHotel.location || !updatedHotel.rate || !updatedHotel.reviews || !updatedHotel.price){
+            res.status(400).send("All fields are required !");
+            return;
+        }
+        const hotel = await Hotel.findById(_id);
+        if(!hotel){
+            res.status(404).send("Hotel not found !");
+            return;
+        }
+        await Hotel.findByIdAndUpdate(_id, updatedHotel);
+        res.status(200).send("Hotel updated successfully !");
+    }catch(error){
+        res.status(500).send(error.message);
     }
-    const updatedData = req.body;
-    const updatedHotel = {...HotelData[hotelIndex], ...updatedData};
-    HotelData.splice(hotelIndex,1);
-    HotelData.push(updatedHotel);
-    res.status(200).send("Hotel updated successfully !");
 }
 
 export const patchHotel = (req,res) => {
