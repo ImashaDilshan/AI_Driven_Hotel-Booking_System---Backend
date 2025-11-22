@@ -107,7 +107,7 @@ export const patchHotel = (req,res) => {
     const updatedData = req.body;
     hotel.price = updatedData.price ;
     res.status(200).send("Hotel price updated successfully !");
-}
+}  
 
 // Data Deletion operation
 export const deleteHotel = (req,res) => {
