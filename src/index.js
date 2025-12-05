@@ -1,15 +1,20 @@
 import 'dotenv/config';
 import express from 'express';
+import cors from 'cors';
 import hotelRouter from './api/hotel.js';
 import reviewRouter from './api/Reviews.js';
+import locationRouter from './api/location.js';
 import connectDB from './infrastucture/db.js';
 
 const app = express(); 
 
-app.use(express.json()); 
+app.use(express.json());
+
+app.use(cors({origin: "http://localhost:5173"}));
 
 app.use("/api/HotelData", hotelRouter);
 app.use("/api/reviews", reviewRouter);
+app.use("/api/locations", locationRouter);
 
 
 connectDB();
