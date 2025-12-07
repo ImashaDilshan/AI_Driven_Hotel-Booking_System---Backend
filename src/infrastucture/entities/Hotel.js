@@ -8,7 +8,10 @@ const hotelSchema = new mongoose.Schema({
     location : { type: String, required: true },
     rate : { type: Number, min: 0, max: 5 },
     reviews : { type: Number },
-    price : { type: String, required: true }
+    price : { type: String, required: true },
+
+    // Child references 
+    reviews : { type : [ mongoose.Schema.Types.ObjectId ], ref : "Review",  default : [] },
 
 })
 
