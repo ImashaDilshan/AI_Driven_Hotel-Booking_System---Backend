@@ -12,6 +12,7 @@ const hotelSchema = new mongoose.Schema({
 
     // Child references 
     reviews : { type : [ mongoose.Schema.Types.ObjectId ], ref : "Review",  default : [] },
+    
 
 })
 
