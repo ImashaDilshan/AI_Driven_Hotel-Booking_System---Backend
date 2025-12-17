@@ -9,7 +9,10 @@ dotenv.config();
 
 const locationSeedData = [
     {
-        name: "Sri Lanka"
+        name: "All"
+    },
+    {
+        name: "Srilanka"
     },
     {
         name: "Australia"
