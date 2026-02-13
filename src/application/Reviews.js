@@ -1,6 +1,8 @@
 import express from 'express';
 import Review from '../infrastucture/entities/Reviews.js';
 import Hotel from '../infrastucture/entities/Hotel.js';
+import NotFoundError from '../domain/errors/not_found_error.js';
+import ValidationError from '../domain/errors/validation_error.js';
 
 // Create a new review old code
 // const createReview = async (req, res) => {
@@ -22,17 +24,17 @@ import Hotel from '../infrastucture/entities/Hotel.js';
 // export { createReview };
 
 // Create a new review
-const createReview = async (req, res) => {
+const createReview = async (req, res, next) => {
     try{
         const reviewData = req.body;
         if (!reviewData.rating || !reviewData.comment || !reviewData.hotelID) {
-            res.status(400).send("All fields are required !");
+            throw new ValidationError("All fields are required !");
             return;
         }
 
         const hotel = await Hotel.findById(reviewData.hotelID);
         if(!hotel){
-            res.status(404).send("Hotel not found !");
+            throw new NotFoundError("Hotel not found !");
             return;
         }
 
@@ -41,7 +43,7 @@ const createReview = async (req, res) => {
         await hotel.save();
         res.status(201).json(newReview);
     }catch(error){
-        res.status(500).send(error.message);
+        next(error);
     }
 };
 export { createReview };
@@ -64,17 +66,17 @@ export { createReview };
 // export { getReviewsByHotelId };
 
 // Get reviews by Hotel ID
-const getReviewsByHotelId = async (req, res) => {
+const getReviewsByHotelId = async (req, res, next) => {
     try{
         const hotelId = req.params.hotelId;
         const hotel = await Hotel.findById(hotelId).populate('reviews');
         if(!hotel){
-            res.status(404).send("No reviews found for this hotel !");
+            throw new NotFoundError("No reviews found for this hotel !");
             return;
         }
         res.status(200).json(hotel.reviews);
     }catch(error){
-        res.status(500).send(error.message);
+        next(error);
     }
 };
 export { getReviewsByHotelId };
