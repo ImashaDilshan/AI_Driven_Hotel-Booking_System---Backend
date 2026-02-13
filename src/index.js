@@ -5,6 +5,7 @@ import hotelRouter from './api/hotel.js';
 import reviewRouter from './api/Reviews.js';
 import locationRouter from './api/location.js';
 import connectDB from './infrastucture/db.js';
+import globalErrorHandler from './api/middlewar/global_error_handle_middleware.js';
 
 const app = express(); 
 
@@ -12,9 +13,17 @@ app.use(express.json());
 
 app.use(cors({origin: "http://localhost:5173"}));
 
+app.use((req, res, next) => {
+    console.log(`${req.method} request received at ${req.url}`);
+    next();
+});
+
 app.use("/api/HotelData", hotelRouter);
 app.use("/api/reviews", reviewRouter);
 app.use("/api/locations", locationRouter);
+
+// Global Error Handling Middleware (post-middleware)
+app.use(globalErrorHandler);
 
 
 connectDB();
