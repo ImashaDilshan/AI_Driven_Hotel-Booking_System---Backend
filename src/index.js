@@ -7,11 +7,15 @@ import locationRouter from './api/location.js';
 import connectDB from './infrastucture/db.js';
 import globalErrorHandler from './api/middlewar/global_error_handle_middleware.js';
 
+import { clerkMiddleware } from '@clerk/express';
+
 const app = express(); 
 
 app.use(express.json());
 
 app.use(cors({origin: "http://localhost:5173"}));
+
+app.use(clerkMiddleware());
 
 app.use((req, res, next) => {
     console.log(`${req.method} request received at ${req.url}`);
