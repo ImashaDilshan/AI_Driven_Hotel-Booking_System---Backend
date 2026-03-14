@@ -1,0 +1,100 @@
+import 'dotenv/config';
+import express from 'express';
+import cors from 'cors';
+import hotelRouter from './api/hotel';
+import reviewRouter from './api/Reviews';
+import locationRouter from './api/location';
+import connectDB from './infrastucture/db';
+import globalErrorHandler from './api/middlewar/global_error_handle_middleware';
+
+import { clerkMiddleware } from '@clerk/express';
+
+const app = express(); 
+
+app.use(express.json());
+
+app.use(cors({origin: "http://localhost:5173"}));
+
+app.use(clerkMiddleware());
+
+app.use((req, res, next) => {
+    console.log(`${req.method} request received at ${req.url}`);
+    next();
+});
+
+app.use("/api/HotelData", hotelRouter);
+app.use("/api/reviews", reviewRouter);
+app.use("/api/locations", locationRouter);
+
+// Global Error Handling Middleware (post-middleware)
+app.use(globalErrorHandler);
+
+
+connectDB();
+
+// // Data Creation Endpoint
+// app.post("/api/Hoteldata" ,(req,res) => {
+//     const newhotel = req.body;
+//     const ID = HotelData.length + 1;
+//     newhotel._id = ID;
+//     if(!newhotel.name || !newhotel.image || !newhotel.location || !newhotel.rate || !newhotel.reviews || !newhotel.price){
+//         res.status(400).send("All fields are required");
+//     }
+//     HotelData.push(newhotel);
+//     res.status(201).send("New hotel added successfully");   
+// })
+
+// // Data Retrieval Endpoint
+// app.get("/api/HotelData",(req,res) => {
+//     res.status(200).json(HotelData);
+// })
+// app.get("/api/HotelData/:_id",(req , res) => {
+//     const ID = parseInt(req.params._id);
+//     console.log("Retrieving hotel with ID:", req.params._id);
+//     const hotel = HotelData.find((h) => h._id === ID);
+//     if(!hotel){
+//         res.status(404).send("Hotel not found");
+//     }
+//     res.status(200).json(hotel);
+// });
+
+// // Data Update Endpoint
+// app.put("/api/HotelData/:_id",(req,res) => {
+//     const ID = parseInt(req.params._id);
+//     const hotelIndex = HotelData.findIndex((h) => h._id === ID);
+//     if(hotelIndex === -1){
+//         res.status(404).send("Hotel not found");
+//     }
+//     const updatedData = req.body;
+//     const updatedHotel = {...HotelData[hotelIndex], ...updatedData};
+//     HotelData.splice(hotelIndex,1);
+//     HotelData.push(updatedHotel);
+//     res.status(200).send("Hotel updated successfully");
+// });
+// app.patch("/api/HotelData/:_id",(req,res) => {
+//     const ID = parseInt(req.params._id);
+//     const hotel = HotelData.find((h) => h._id === ID);
+//     if(!hotel){
+//         res.status(404).send("Hotel not found");
+//     }
+//     const updatedData = req.body;
+//     hotel.price = updatedData.price ;
+//     res.status(200).send("Hotel price updated successfully");
+// });
+
+// // Data Deletion Endpoint
+// app.delete("/api/HotelData/:_id",(req,res) => {
+//     const ID = parseInt(req.params._id);
+//     const hotelIndex = HotelData.findIndex((h) => h._id === ID);
+//     if(hotelIndex === -1){
+//         res.status(404).send("Hotel not found");
+//     }
+//     HotelData.splice(hotelIndex,1);
+//     res.status(200).send("Hotel deleted successfully");
+// })
+
+
+const PORT = 8000;     
+app.listen(PORT, () => {
+    console.log("Server is listening on port : ", PORT);
+});
