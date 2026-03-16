@@ -1,0 +1,24 @@
+{
+  "compilerOptions": {
+    "target": "ES2020",                         /* modern JS output */
+    "module": "CommonJS",                      /* Node-style imports/exports */
+    "rootDir": "src",                          /* source root */
+    "outDir": "dist",                          /* compiled files go here */
+    "strict": true,                            /* enable all strict type-checking */
+    "esModuleInterop": true,                   /* support default imports from CommonJS */
+    "forceConsistentCasingInFileNames": true,  /* match file name casing */
+    "skipLibCheck": true,                      /* speed up builds by skipping lib checks */
+    "resolveJsonModule": true,                 /* import JSON modules if needed */
+    "noImplicitAny": true,                     /* no implicit `any` types */
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+    "moduleResolution": "node",
+    "allowJs": true,                           /* allow gradual migration */
+    "checkJs": false,                          /* don’t type-check existing JS yet */
+    "sourceMap": true,                         /* for debugging */
+    "types": ["node"]                          /* include node type definitions */
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist"]
+}
