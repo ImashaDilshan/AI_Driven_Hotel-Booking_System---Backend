@@ -1,0 +1,100 @@
+import { Location } from '../infrastucture/entities/location';
+import NotFoundError from '../domain/errors/not_found_error';
+import ValidationError from '../domain/errors/validation_error';
+import { Request,Response,NextFunction } from 'express';
+
+// Data Retrieval async operations
+export const getAllLocations = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const locations = await Location.find();
+        res.status(200).json(locations);
+    } catch (error) {
+        next(error);
+    }
+}
+
+export const getLocationById = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const ID = req.params._id;
+        const location = await Location.findById(ID);
+        if (!location) {
+            throw new NotFoundError("Location not found !");
+            return;
+        }
+        res.status(200).json(location);
+    } catch (error) {
+       next(error);
+    }
+}
+
+// Data Creation async operation
+export const createLocation = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const newLocation = req.body;
+        if (!newLocation.name) {
+            throw new ValidationError("Location name is required !");
+            return;
+        }
+        await Location.create(newLocation);
+        res.status(201).send("New location added successfully !");
+    } catch (error) {
+       next(error);
+    }
+}
+
+// Data Update operations
+export const updateLocation = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const _id = req.params._id;
+        const updatedLocation = req.body;
+        if (!updatedLocation.name) {
+            throw new ValidationError("Location name is required !");
+            return;
+        }
+        const location = await Location.findById(_id);
+        if (!location) {
+            throw new NotFoundError("Location not found !");
+            return;
+        }
+        await Location.findByIdAndUpdate(_id, updatedLocation);
+        res.status(200).send("Location updated successfully !");
+    } catch (error) {
+       next(error);
+    }
+}
+
+export const patchLocation = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const _id = req.params._id;
+        const locationUpdates = req.body;
+        if (!locationUpdates.name) {
+            throw new ValidationError("Location name is required for patching !");
+            return;
+        }
+        const location = await Location.findById(_id);
+        if (!location) {
+            throw new NotFoundError("Location not found !");
+            return;
+        }
+        await Location.findByIdAndUpdate(_id, { name: locationUpdates.name });
+        res.status(200).send("Location name updated successfully !");
+    } catch (error) {
+        next(error);
+    }
+}
+
+// Data Deletion operation
+export const deleteLocation = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const _id = req.params._id;
+        const location = await Location.findById(_id);
+        if (!location) {
+            throw new NotFoundError("Location not found !");
+            return;
+        }
+        await Location.findByIdAndDelete(_id);
+        res.status(200).send("Location deleted successfully !");
+    } catch (error) {
+       next(error);
+    }
+}
